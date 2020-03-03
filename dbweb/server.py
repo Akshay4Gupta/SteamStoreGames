@@ -129,7 +129,7 @@ try:
         if request.method == "POST":
             if 'data' in request.get_json():
                 details = request.get_json()["data"]
-            
+
 
             if 'pricedata' in request.get_json():
 
@@ -148,21 +148,21 @@ try:
                 if npfind == '':
                     nplist = []
                 else:
-                    nplist = npfind.split(",") 
-            
+                    nplist = npfind.split(",")
+
             if 'gt' in details:
                 genrefind = details['gt']
-                
+
                 if genrefind == '':
                     genrelist = []
                 else :
                     genrelist = genrefind.split(",")
 
             if 'searching' in details:
-                print(details)
+
                 searchfind = details['searching']
-                print(searchfind)
-            
+                # print(searchfind)
+
             if 'minprice' in pricedetails:
                 lowerlim = float(pricedetails["minprice"])
 
@@ -177,17 +177,17 @@ try:
             if searchfind == "":
 
                 if nplist == []:
-                    genrefindquery = "select name, genres, price, appid, header_image from asteam, mediadata where (Array%s::text[] <@ genres) and (price between %s and %s) and steam_appid = appid;"
+                    genrefindquery = "select name, genres, price, appid, positive_ratings, negative_ratings, header_image from asteam, mediadata where (Array%s::text[] <@ genres) and (price between %s and %s) and steam_appid = appid;"
                     cursor.execute(genrefindquery%(genrelist, lowerlim, upperlim))
                     tab = cursor.fetchall()
 
                 elif genrelist == []:
-                    npfindquery = "select name, genres, price, appid from asteam where Array%s <@ categories and price between %s and %s;"
+                    npfindquery = "select name, genres, price, appid, positive_ratings, negative_ratings, header_image from asteam, mediadata where appid = steam_appid and Array%s <@ categories and price between %s and %s;"
                     cursor.execute(npfindquery%(nplist, lowerlim, upperlim))
                     tab = cursor.fetchall()
 
                 else :
-                    andquery = "(select name, genres, price, appid from asteam where Array%s <@ categories and price between %s and %s) intersect (select name, genres, price, appid from asteam where Array%s <@ genres)"
+                    andquery = "(select name, genres, price, appid, positive_ratings, negative_ratings, header_image from asteam, mediadata where appid = steam_appid and Array%s <@ categories and price between %s and %s) intersect ( select name, genres, price, appid, positive_ratings, negative_ratings, header_image from asteam, mediadata where Array%s <@ genres)"
                     cursor.execute(andquery%(nplist, lowerlim, upperlim, genrelist))
                     tab = cursor.fetchall()
 
@@ -196,24 +196,27 @@ try:
 
                 if nplist == [] and genrelist == []:
 
-                    cursor.execute("SELECT * FROM games(%s::text) where cost between %s and %s", (searchfind,lowerlim,upperlim))
+                    cursor.execute("select name, genres, price, appid, positive_ratings, negative_ratings, header_image from (select asteam.name, asteam.genres, asteam.price,  asteam.appid, asteam.positive_ratings, asteam.negative_ratings from (SELECT * FROM games('%s'::text) where cost between %s and %s) as temp, asteam where temp.aid = asteam.appid) as temp, mediadata where appid = steam_appid"% (searchfind,lowerlim,upperlim))
                     tab = cursor.fetchall()
 
                 else:
+                    # change the game function
                     if nplist == []:
-                        genrefindquery = "(select name, genres, price, appid from asteam where Array%s <@ genres and price between %s and %s) intersect (SELECT * FROM games(%s::text)))"%searchfind
+                        genrefindquery = "select name, genres, price, appid, positive_ratings, negative_ratings, header_image from (select asteam.name, asteam.genres, asteam.price, asteam.appid, asteam.positive_ratings, asteam.negative_ratings from ((select name, genres, price, appid from asteam where Array%s <@ genres and price between %s and %s) intersect (SELECT * FROM games('%s'::text))) as temp, asteam where temp.appid = asteam.appid) as temp, mediadata where appid = steam_appid"
                         cursor.execute(genrefindquery%(genrelist, lowerlim, upperlim, searchfind))
                         tab = cursor.fetchall()
-
+                        # cursor.execute(genrefindquery)
                     elif genrelist == []:
-                        npfindquery = "(select name, genres, price, appid from asteam where Array%s <@ categories and price between %s and %s) intersect (SELECT * FROM games(%s::text)))"%searchfind
+                        npfindquery = "select name, genres, price, appid, positive_ratings, negative_ratings, header_image from (select asteam.name, asteam.genres, asteam.price, asteam.appid, asteam.positive_ratings, asteam.negative_ratings from ((select name, genres, price, appid from asteam where Array%s <@ categories and price between %s and %s) intersect (SELECT * FROM games('%s'::text))) as temp, asteam where temp.appid = asteam.appid) as temp, mediadata where appid = steam_appid"
                         cursor.execute(npfindquery%(nplist, lowerlim, upperlim, searchfind))
                         tab = cursor.fetchall()
+                        # cursor.execute(genrefindquery)
 
                     else :
-                        andquery = "(select name, genres, price, appid  from asteam where Array%s <@ categories and price between %s and %s) intersect (select name, genres, price, appid from asteam where Array%s <@ genres) intersect (SELECT * FROM games(%s::text)))"
+                        andquery = "select name, genres, price, appid, positive_ratings, negative_ratings, header_image from (select asteam.name, asteam.genres, asteam.price, asteam.appid, asteam.positive_ratings, asteam.negative_ratings from ((select name, genres, price, appid from asteam where Array%s <@ categories and price between %s and %s) intersect (select name, genres, price, appid from asteam where Array%s <@ genres) intersect (SELECT * FROM games('%s'::text))) as temp, asteam where temp.appid = asteam.appid ) as temp, mediadata where appid = steam_appid"
                         cursor.execute(andquery%(nplist,lowerlim, upperlim, genrelist, searchfind))
-                        tab = cursor.fetchall()        
+                        tab = cursor.fetchall()
+                        # cursor.execute(andquery%(nplist,lowerlim, upperlim, genrelist, searchfind))
 
 
             # appidtuple = ()
@@ -224,9 +227,9 @@ try:
             # cursor.execute(gamequery)
             # tab2 = cursor.fetchall()
 
+            # print(tab)
             print(tab)
-            
-            return {"data": tab}
+            return {"data": tab[:50]}
         else:
             details =  request.args
             # print(details)
@@ -254,7 +257,7 @@ try:
          # for key in keys:
          #     if key != 'user' and key != 'current_url':
          #         session.pop(key, None)
-        print("Function6")
+        # print("Function6")
         loginval = 'Login'
         user = 'Welcome'
         if 'user' in session:
@@ -264,7 +267,7 @@ try:
         else:
             print('Poor thing :)')
 
-        query = 'select appid, name, release_date, header_image, genres, achievements, positive_ratings, negative_ratings, average_playtime, developer, price from asteam, mediadata where steam_appid = appid limit 50;'
+        query = 'select appid, name, release_date, header_image, genres, achievements, positive_ratings, negative_ratings, average_playtime, developer, price from asteam, mediadata where steam_appid = appid order by positive_ratings - negative_ratings desc limit 50;'
         cursor.execute(query)
         result = cursor.fetchall()
         loggedin = ''

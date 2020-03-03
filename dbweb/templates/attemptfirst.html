@@ -1,6 +1,6 @@
 <!-- <div style="background-image: url('https://steamcdn-a.akamaihd.net/steam/apps/10/page_bg_generated_v6b.jpg?t=1528733245');"> -->
 {% extends "base.html" %}
-    
+
     {% block head %}
     <title>
         top seller
@@ -34,7 +34,10 @@
         var page_name = "attempt_page";
         // var searchdata = {{dictdata}}
         // drawtable(searchdata["data"])
-
+        function redirect_to_game(appid)
+        {
+          window.location = "/alag/"+appid;
+        }
     </script>
 
     <script>
@@ -45,11 +48,27 @@
             var i;
             for (i=0; i<data.length; i++)
             {
-               tabstr +=  `<tr>
-                    <td><a href="">${data[i][0]}</a></td>
-                    <td>${data[i][1]}</td>
-                    <td>${data[i][2]}</td>
-                </tr>`
+               tabstr +=  `
+               <button type = "button" style = "color: white; font-family: serif;" class = "btn btn-lg btn-block" onclick = "redirect_to_game({{appid}})">
+           			<div class="row">
+                <div class = "col">
+                  <img src = "${data[i][6]}" width = "160px" height = "100px" class = "float-left"></img>
+                </div>
+           			<div class = "col">
+                  ${data[i][0]}
+                </div>
+                <div class = "col">
+                  ${data[i][1]}
+                </div>
+                <div class = "col">
+                <i class = "fa fa-caret-up" style = "color: green;"></i>&nbsp${data[i][4]}<br>
+                <i class = "fa fa-caret-down" style = "color: red;"></i>&nbsp${data[i][5]}
+              </div>
+                <div class = "col">
+                  ${data[i][2]}
+                </div>
+                </div>
+                </button>`
             }
             $("#fromdb").html(tabstr)
         }
@@ -63,22 +82,22 @@
         // var checks = new Array(5).fill('')
 
 
-        $(document).ready(function(){       
+        $(document).ready(function(){
             var strcheck = ""
             var strcheck2 = ""
             var lowerlimit = 0
             var upperlimit = 500
-
+            var search_string = ""
 
             // var search_string = "hated"
             if(sessionStorage.getItem("srch") !== null){
                 var fromsession = JSON.parse(sessionStorage["srch"]);
-                drawTable(fromsession["data"])  
-                sessionStorage.removeItem("srch")              
+                drawTable(fromsession["data"])
+                sessionStorage.removeItem("srch")
             }
 
 
-            alert("Welcome")
+            // alert("Welcome")
             $('.genrecb').change(function() {
                 // if ($(this).is(':checked')){
                     // alert("Hi My Name is chikka chikka slim shady");
@@ -88,14 +107,15 @@
                        favorite.push($(this).val());
                     });
                     strcheck = favorite.join(",")
-                    console.log(strcheck)
+                    // console.log(strcheck)
 
                     // strcheck = strcheck + 'Indie,'
                     // alert(checks)
 
                    // $.post('/redirecttopsell', {gt : strcheck}, );
-                    alert("genres")
-                    data = {"gt": strcheck, "np": strcheck2}
+                    // alert("genres")
+                    search_string = $("#gs").val();
+                    data = {"gt": strcheck, "np": strcheck2, "searching": search_string}
                     pricedata = {"minprice" : lowerlimit, "maxprice" : upperlimit}                    // console.log(search_string)
                     // if ((search_string == "") || (search_string == "notclickbase")){
                     //         senddict = {"data": data}
@@ -134,19 +154,19 @@
                     // checks[0] = "Indie";
                     var favorite2 = [];
                     $.each($("input[name='npcb']:checked"), function(){
-                       favorite2.push($(this).val());
+                       favorite2.push($(this).val())
                     });
                     strcheck2 = favorite2.join(",")
-                    console.log(strcheck2)
+                    // console.log(strcheck2)
 
                     // strcheck = strcheck + 'Indie,'
                     // alert(checks)
 
                    // $.post('/redirecttopsell', {gt : strcheck}, );
-                    alert("npppppppp")
+                    // alert("npppppppp")
                     // data = {"gt": strcheck}
                     // console.log(search_string)
-                    
+
                     // var senddict ={};
                     // if ((search_string == "") || (search_string == "notclickbase")){
                     //         senddict = {"data": data}
@@ -163,9 +183,10 @@
 
 
                     // console.log("***"+search_string)
-                    data = {"gt": strcheck, "np": strcheck2}
-                pricedata = {"minprice" : lowerlimit, "maxprice" : upperlimit}  
-                alert(JSON.stringify({"pricedata": pricedata, "data": data}))
+                    search_string = $("#gs").val();
+                    data = {"gt": strcheck, "np": strcheck2, "searching": search_string}
+                pricedata = {"minprice" : lowerlimit, "maxprice" : upperlimit}
+                // alert(JSON.stringify({"pricedata": pricedata, "data": data}))
                     $.ajax({
                         url: '/redirecttopsell',
                         dataType: 'json',
@@ -188,7 +209,8 @@
             $("#searchprice").click(function(){
                 lowerlimit = $("#minprice").val()
                 upperlimit = $("#maxprice").val()
-                data = {"gt": strcheck, "np": strcheck2}
+                search_string = $("#gs").val();
+                data = {"gt": strcheck, "np": strcheck2, "searching": search_string}
                 pricedata = {"minprice" : lowerlimit, "maxprice" : upperlimit}
                 alert(JSON.stringify({"data": data, "pricedata": pricedata}))
 
@@ -213,38 +235,42 @@
             });
 
 
-        
+
     });
 
     </script>
     {% endblock %}
-
     {% block body %}
         {{ super() }}
         </br>
         </br>
-    
-            <div class="container-fluid">
-                <div class = "row">
-                    <div class = "col-sm">
-        
-                    </div>
-                    <div class = "col-sm">
-        
-                    </div>
-                    <div class = "col-sm">
-        
-                    </div>
-                    <div class = "col-sm">
-        
-                    </div>
-                    <div class = "col-sm">
-        
-                    </div>
-                    <div class = "col-sm">
-        
-                    </div>
-                    <div class = "col-sm">
+      <main class = "container">
+        <div class = "container row">
+        <div  style="overflow-x:auto;" id = "fromdb" class = "col-sm-10">
+
+        </div>
+
+            <div class = "col-sm-2">
+              <div class = "row">
+
+                  <div>
+                      <form>
+                      </br></br></br>
+                          <h6>PRICE RANGE</h6>
+                          <!-- <label for="minprice">Min Price:</label> -->
+                          <input height="10" id="minprice" name="minprice" class="form-control mr-sm-2" type="search" placeholder="Lower Limit" aria-label="Search">
+                          </br>
+                          <!-- <input type="text" id="minprice" name="minprice" class="minprice"><br><br> -->
+                          <!-- <label for="maxprice">Max Price:</label> -->
+                          <input id="maxprice" name="maxprice" class="form-control mr-sm-2" type="search" placeholder="Upper Limit" aria-label="Search">
+                          </br>
+                          <!-- <input type="text" id="maxprice" name="maxprice" class="maxprice"><br><br> -->
+                          <button formmethod="post" id="searchprice" name="searchprice" value="searchprice" class="btn btn-outline-success my-2 my-sm-0" type="button">Filter</button>&emsp;
+
+                      </form>
+                  </div>
+      </div>
+                <div class = "row mt-5  ">
                         <form>
                             <input type="checkbox" class="genrecb" id="indie" name="genrecb" value="Indie">
                             <label for="indie"> Indie</label><br>
@@ -256,7 +282,7 @@
                             <label for="casual"> Casual </label><br>
                             <input type="checkbox" class="genrecb" id="rpg" name="genrecb" value="RPG">
                             <label for="rpg"> Role Playing Games </label><br>
-                            
+
                             <input type="checkbox" class="genrecb" id="racing" name="genrecb" value="Racing">
                             <label for="racing"> Racing </label><br>
                             <input type="checkbox" class="genrecb" id="violent" name="genrecb" value="Violent">
@@ -267,44 +293,24 @@
                             <label for="sports"> Sports </label><br>
                             <input type="checkbox" class="genrecb" id="strategy" name="genrecb" value="Strategy">
                             <label for="strategy"> Strategy </label><br>
-    
+
                             <input type="checkbox" class="genrecb" id="utilities" name="genrecb" value="Utilities">
                             <label for="strategy"> Utilities </label><br>
                             <input type="checkbox" class="genrecb" id="animation" name="genrecb" value="Animation & Modeling">
                             <label for="strategy"> Animation </label><br>
-    
+
                             <input type="checkbox" class="genrecb" id="massivelymultiplayer" name="genrecb" value="Massively Multiplayer">
                             <label for="massivelymultiplayer"> Massively Multiplayer </label><br>
-    
+
                             <input type="checkbox" class="genrecb" id="education" name="genrecb" value="Education">
                             <label for="education"> Education </label><br>
-    
+
                         </form>
-                    </div>
                 </div>
             </br>
             </br>
                 <div class = "row">
-                    <div class = "col-sm">
-    
-                    </div>
-                    <div class = "col-sm">
-    
-                    </div>
-                    <div class = "col-sm">
-    
-                    </div>
-                    <div class = "col-sm">
-    
-                    </div>
-                    <div class = "col-sm">
-    
-                    </div>
-                    <div class = "col-sm">
-    
-                    </div>
-                    <div class = "col-sm">
-    
+
                         <form>
                             <input type="checkbox" class="npcb" id="singleplayer" name="npcb" value="Single-player">
                             <label for="singleplayer"> Single-Player</label><br>
@@ -318,7 +324,7 @@
                             <label for="onlinemultiplayer"> Online Multi-Player </label><br>
                             <input type="checkbox" class="npcb" id="onlinecoop" name="npcb" value="Online Co-op">
                             <label for="onlinecoop"> Online Co-op </label><br>
-    
+
                             <input type="checkbox" class="npcb" id="vrsupport" name="npcb" value="VR Support">
                             <label for="vrsupport"> VR Support</label><br>
                             <input type="checkbox" class="npcb" id="stc" name="npcb" value="Steam Trading Cards">
@@ -334,60 +340,20 @@
                             <input type="checkbox" class="npcb" id="sss" name="npcb" value="Shared/Split Screen">
                             <label for="sss"> Shared/Split Screen </label><br>
                         </form>
-                    </div>
             </div>
-    
-    
-    
-    
-    
-            <div class = "row">
-                <div class = "col-sm">
-    
-                </div>
-                <div class = "col-sm">
-    
-                </div>
-                <div class = "col-sm">
-    
-                </div>
-                <div class = "col-sm">
-    
-                </div>
-                <div class = "col-sm">
-    
-                </div>
-                <div class = "col-sm">
-    
-                </div>
-                <div class = "col-sm">
-    
-                <div>
-                    <form>
-                    </br></br></br>
-                        <h6>PRICE RANGE</h6>
-                        <!-- <label for="minprice">Min Price:</label> -->
-                        <input height="10" id="minprice" name="minprice" class="form-control mr-sm-2" type="search" placeholder="Lower Limit" aria-label="Search">
-                        </br>
-                        <!-- <input type="text" id="minprice" name="minprice" class="minprice"><br><br> -->
-                        <!-- <label for="maxprice">Max Price:</label> -->
-                        <input id="maxprice" name="maxprice" class="form-control mr-sm-2" type="search" placeholder="Upper Limit" aria-label="Search">
-                        </br>
-                        <!-- <input type="text" id="maxprice" name="maxprice" class="maxprice"><br><br> -->
-                        <button formmethod="post" id="searchprice" name="searchprice" value="searchprice" class="btn btn-outline-success my-2 my-sm-0" type="button">Search</button>&emsp;
-                      
-                    </form>
-                </div>
-    
-        </div>
-    </div>
-    
+
+
+
+
+
+
+
         <!-- <table id = "fromdb" style="width:100%">
             <tr>
                 <th>Game</th>
                 <th>Genres</th>
             </tr>
-    
+
             {% for items in tab %}
             <tr>
               <td>{{ items[0] }}</td>
@@ -395,13 +361,11 @@
             </tr>
             {% endfor %}
         </table>  -->
-        <div style="overflow-x:auto;">
-            <table id = "fromdb">
-            </table> 
-        </div>
-    
+</div>
+</div>
+    </main>
 
-       
+
 
     {% endblock %}
 <!-- </div> -->

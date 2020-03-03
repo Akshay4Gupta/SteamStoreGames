@@ -77,27 +77,10 @@
 	display:table-cell;
 	width:2%;
 	}
-    .sidenav {
-      height: 100%; /* 100% Full-height */
-      width: 250px; /* 0 width - change this with JavaScript */
-      /* position: fixed; */
-      z-index: 1; /* Stay on top */
-      top: 0; /* Stay at the top */
-      left: 0;
-      background-color: #111; /* Black*/
-      overflow-x: hidden; /* Disable horizontal scroll */
-      padding-top: 60px; /* Place content 60px from the top */
-      padding-left: 20px;
-      padding-bottom: 30px;
-      transition: 0.5s; /* 0.5 second transition effect to slide in the sidenav */
-    }
 </style>
 {%endblock%}
 {%block body%}
-<div id="wrapper">
-	<div id="third">
-
-	</div>
+<div id="wrapper" class = "container">
 	<div id="first">
 
 		<nav>
@@ -161,7 +144,8 @@
             {%endfor%}
     </div>
 </div>
-<div id="mySideNav" class="sidenav">
+<div id="third" class = "mt-5">
+<div id="mySideNav" class="">
         <!-- <form>
             <input type="checkbox" class="cb" id="indie" name="indiecb" value="indie">
             <label for="indie"> Indie</label><br>
@@ -191,5 +175,5 @@
         </form>
 </div>
 </div>
-
+</div>
 {%endblock%}
