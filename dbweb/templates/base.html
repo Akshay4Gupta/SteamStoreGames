@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js">
+</script><script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js">
+</script><script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+<script>
+
+    var page_name = "base";
+    $(document).ready(function(){
+        $("#login_button").click(function(){
+            if($(this).text() == "Login")
+            {
+                // alert($(this).text())
+                $.post('/login', {current_url : $(location).attr("href")}, function(success){
+                    window.location = "/login";
+                });
+            }
+            else {
+                $.get("/logout_user", function(data){
+                    location.reload(true)
+                });
+            }
+        });
+    
+        $("#search").click(function(){
+            search_string = $("#gs").val();
+            data = {"searching": search_string}
+            $.ajax({
+                url: '/redirecttopsell',
+                dataType: 'json',
+                type: 'post',
+                async: false,
+                contentType: 'application/json',
+                data: JSON.stringify( {"data": data} ),
+                processData: false,
+                success: function( data, textStatus, jQxhr ){
+                    sessionStorage["srch"] = JSON.stringify(data);
+                    // sessionStorage["searching"] = search_string
+                    if(page_name == "attempt_page"){
+                        alert(JSON.stringify(data))
+                        drawTable(data["data"])
+                    }else{
+                       window.location = "/topsellpage" 
+                    }
+                },
+                error: function( jqXhr, textStatus, errorThrown ){
+                    console.log(textStatus);
+                }
+                });
+            
+        });
+    
+    });
+</script>
+{%block head%}
+{%endblock%}
+<style>
+body{
+  {%if gameMedia is defined%}
+  background-image: url({{gameMedia[-2]}});
+  {else}
+  background-color: black;
+  {%endif%}
+  background-repeat: no-repeat; -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+  background-attachment: fixed; background-color: 003030; color: white}
+  </style>
+</head>
+
+<body>
+<div class="sticky mb-5">
+	<nav class="navbar navbar-expand-lg navbar-light bg-dark header" id = "myHeader">
+        <a class="navbar-brand" href="#">{{user}}</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon">
+        </span></button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item active">
+                <a class="nav-link" href="/">Home <span class="sr-only">(current)</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">Link</a>
+            </li>
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Dropdown</a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <a class="dropdown-item" href="#">Action</a>
+                    <a class="dropdown-item" href="#">Another action</a>
+                <div class="dropdown-divider">
+                </div><a class="dropdown-item" href="#">Something else here</a></div>
+
+            </li>
+            {%if user != 'Welcome'%}
+            <li class="nav-item"><a class="nav-link" href="/cart">Cart</a></li>
+            {%endif%}
+        </ul><form class="form-inline my-2 my-lg-0">
+                    <input id="gs" name="gs" class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+                    <button formmethod="post" id="search" name="search" value="search" class="btn btn-outline-success my-2 my-sm-0" type="button">Search</button>&emsp;
+                </form><button class="btn btn-outline-success my-2 my-sm-0" type="submit" id="login_button">{{login}}</button>
+            </div>
+        </nav>
+	{%block body%}
+	{%endblock%}
+</body>
+
+</html>

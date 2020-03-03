@@ -1,0 +1,68 @@
+<html>
+	<head>
+	  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	  <meta name="viewport" content="width=device-width, initial-scale=1" />
+	  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	  <meta name="author" content="colorlib.com">
+	  <link href="https://fonts.googleapis.com/css?family=Poppins" rel="stylesheet" />
+	  <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+	  <script>
+		  $(document).ready(function(){
+			  // $(#submit_button).click(function(){
+				//  $.post("http://127.0.0.1:5000/register", $("#register_form").serialize(), function(data){
+				// 	 alert("Data loaded: " + data)
+				//  });
+			  // });
+			  $("#submit_button").click(function(){
+    				 // $("#check").html(($(this).serialize()));
+       				 $.post("/login_user", $("#login_form").serialize(), function(data){
+    					 // if(data == 'NOT_FOUND')
+    					 // 	// $('#check').html('Invalid email or password!');
+                         //    window.location = '/login_fail'
+    					 // else
+    					 // 	// $('#check').html('Login successful!');
+                         alert("Login Successful!")
+                         if(data == "FOUND")
+                         {
+                            var currurl = '{{currurl}}';
+                            currurl = currurl.replace("&amp;", "&");
+                            window.location = currurl;
+                         }
+                         else {
+                             $("#check").html("Login failed! The userid or password don't match!!!! :)))) xD")
+                         }
+    				 });
+		  	  });
+		  });
+		  </script>
+		  <style>
+			  body{
+				  background-color: black;
+				  color: white;
+			  }
+		  </style>
+	</head>
+	<body>
+		<div>
+			<form id="login_form" action="/login_user" method="post">
+
+				<fieldset>
+				  <legend>LOGIN</legend>
+				  <p>
+					<label for="email">Username:</label>
+					<input type="text" id="email" name="userid">
+				  </p>
+				  <p>
+					<label for="password">password:</label>
+					<input type="password" id="password" name="pass">
+				  </p>
+				  <p>
+					<button type="button" id="submit_button">Submit</button>
+				  </p>
+				</fieldset>
+
+			  </form>
+		</div>
+		<div id="check"></div>
+	</body>
+</html>

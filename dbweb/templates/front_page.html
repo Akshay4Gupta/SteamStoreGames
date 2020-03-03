@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block head %}
+{% endblock %}
+
+{% block  body%}
+<nav>
+	<br>
+	<h4>Recommended</h4>
+	<a href="/filter?filterValue=Recfriends" id="friends">By Friends</a><br>
+	<a href="#" id="curators">By Curators</a><br>
+	<a href="#" id="tags">Tags</a><br><br>
+
+	<h4>Discovery Queues</h4>
+	<a href="#" id="recommendations">Recommendations</a><br>
+	<a href="#" id="new_releases">New Releases</a><br><br>
+
+	<h4>Browse Categories</h4>
+	<a href="/filter?filterValue=Topsellers" id="top_sellers">Top Sellers</a><br>
+	<a href="#" id="rec_upd">Recently Updated</a><br>
+	<a href="/filter?filterValue=Newreleases" id="new_releases">New Releases</a><br>
+	<a href="/filter?filterValue=Upcoming" id="upcoming">Upcoming</a><br>
+	<a href="#" id="specials">Specials</a><br>
+	<a href="/filter?filterValue=VR" id="virtual_reality">Virtual Reality</a><br>
+	<a href="/filter?filterValue=Steamcontroller" id="steam_controller_friendly">Steam Controller Friendly</a>
+
+</nav>
+
+{% endblock %}

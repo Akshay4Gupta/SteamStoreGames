@@ -1,0 +1,88 @@
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="author" content="colorlib.com">
+    <link href="https://fonts.googleapis.com/css?family=Poppins" rel="stylesheet" />
+    <link href="css/main.css" rel="stylesheet" />
+	<script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+	<script>
+	$(document).ready(function(){
+	    $("#search_button").click(function(){
+
+			var search_string = $("#search").val();
+
+	        $.getJSON("/searchresults", {search : search_string}, function(game_info){
+	            // Display 	the returned data in browser
+				// $("#result").html(game)
+				// var table_string = "<table><tr><th>Name</th><th>Score</th></tr>";
+				//
+				// var game_arr = game_info["game"];
+				//
+				// var table_arr = [];
+				//
+				// $.each(game_arr, function(index, value){
+				// 	var s = "<tr>";
+				// 	$.each(value, function(i, v){
+				// 		s += "<td>" + v + "</td>";
+				// 	});
+				// 	s += "</tr>";
+				// 	table_arr.push(s);
+					$("#result").html(game_info['table_string'])
+				});
+	        });
+
+		$("#register_button").click(function(){
+				url = "http://127.0.0.1:5000/register";
+				window.location = url;
+			});
+
+		$("#login_button").click(function(){
+				url = "http://127.0.0.1:5000/login";
+				window.location = url;
+			});
+	});
+	</script>
+  </head>
+  <body>
+	<div>
+		<!-- <form id="register_form"> -->
+			<button type="submit" id="register_button">Register</button>
+		<!-- </form> -->
+
+		<!-- <form id="login_form"> -->
+			<button type="submit" id="login_button">Login</button>
+		<!-- </form> -->
+
+	</div>
+	<div class="input-group mb-3">
+	  <div class="input-group-prepend">
+	      <input type="checkbox" aria-label="Checkbox for following text input"> HEllo
+	    </div>
+	</div><div class="input-group mb-3">
+	  <div class="input-group-prepend">
+	      <input type="checkbox" aria-label="Checkbox for following text input"> anant bsdnka
+	    </div>
+	</div>
+    <div>
+      <form>
+        <fieldset>
+          <legend>Discover the Amazing Game</legend>
+        </fieldset>
+        <div class="inner-form">
+          <div class="input-field first-wrap">
+            <input id="search" type="text" placeholder="What are you looking for?" />
+          </div>
+          <div class="input-field third-wrap">
+            <button class="btn-search" type="button" id="search_button">Search</button>
+          </div>
+        </div>
+      </form>
+    </div>
+	<br>
+	<div id="result">
+		Death awaits you
+	</div>
+  </body><!-- This templates was made by Colorlib (https://colorlib.com) -->
+</html>

@@ -1,0 +1,68 @@
+{%extends "base.html"%}
+{% block head %}
+<script>
+    function buygame(game_id)
+    {
+        // alert('game_id: ' + game_id)
+        $.post("/bought", {game_id: game_id}, function(success){
+            window.location = "/cart"
+        })
+    }
+
+    function redirect_to_game(appid)
+    {
+      window.location = "/alag/"+appid;
+    }
+</script>
+{%endblock%}
+
+{%block body%}
+<main role="main" class="container-fluid">
+    <div class = "row">
+        <div class = "col-sm">
+            <table class="table table-dark">
+                <thead>
+                    <tr>
+                        <th scope="col">Name</th>
+                        <th scope="col">Price</th>
+                        <th scope="col"></th>
+                        <th scope="col"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for tuple in table1 %}
+                        <tr>
+                            {% for i in range(1, tuple | length) %}
+                                <td> {{tuple[i]}} </td>
+                            {% endfor %}
+                                <td><button type="button" class="btn btn-success" id="buy_button" onclick="buygame('{{tuple[0]}}')">Buy</button></td>
+                                <td><button type="button" class="btn btn-danger" id="remove_button">Remove</button></td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class = "row">
+        <div class = "col-sm">
+            <h1>GAMES BOUGHT</h1>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">Name</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for tuple2 in table2 %}
+                        <tr>
+                            {% for i in range(1, tuple2 | length) %}
+                                <td> {{tuple2[i]}} </td>
+                            {% endfor %}
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</main>
+{%endblock%}

@@ -1,0 +1,407 @@
+<!-- <div style="background-image: url('https://steamcdn-a.akamaihd.net/steam/apps/10/page_bg_generated_v6b.jpg?t=1528733245');"> -->
+{% extends "base.html" %}
+    
+    {% block head %}
+    <title>
+        top seller
+    </title>
+
+
+
+
+
+    <style>
+        body{
+        background-color:black;
+        color:white;
+
+        /* padding:8px;
+        font-family:helvetica;
+        font-size:12px;
+        width:980px; */
+        }
+
+        table, th, td {
+        border: 1px solid teal;
+        width: 50%;
+
+}
+
+    </style>
+
+
+    <script>
+        var page_name = "attempt_page";
+        // var searchdata = {{dictdata}}
+        // drawtable(searchdata["data"])
+
+    </script>
+
+    <script>
+
+
+        function drawTable(data){
+            var tabstr = "";
+            var i;
+            for (i=0; i<data.length; i++)
+            {
+               tabstr +=  `<tr>
+                    <td><a href="">${data[i][0]}</a></td>
+                    <td>${data[i][1]}</td>
+                    <td>${data[i][2]}</td>
+                </tr>`
+            }
+            $("#fromdb").html(tabstr)
+        }
+
+        function sess(search_string){
+            if(sessionStorage.getItem("searching") !== null)
+                return 1;
+
+            else return 0;
+        }
+        // var checks = new Array(5).fill('')
+
+
+        $(document).ready(function(){       
+            var strcheck = ""
+            var strcheck2 = ""
+            var lowerlimit = 0
+            var upperlimit = 500
+
+
+            // var search_string = "hated"
+            if(sessionStorage.getItem("srch") !== null){
+                var fromsession = JSON.parse(sessionStorage["srch"]);
+                drawTable(fromsession["data"])  
+                sessionStorage.removeItem("srch")              
+            }
+
+
+            alert("Welcome")
+            $('.genrecb').change(function() {
+                // if ($(this).is(':checked')){
+                    // alert("Hi My Name is chikka chikka slim shady");
+                    // checks[0] = "Indie";
+                    var favorite = [];
+                    $.each($("input[name='genrecb']:checked"), function(){
+                       favorite.push($(this).val());
+                    });
+                    strcheck = favorite.join(",")
+                    console.log(strcheck)
+
+                    // strcheck = strcheck + 'Indie,'
+                    // alert(checks)
+
+                   // $.post('/redirecttopsell', {gt : strcheck}, );
+                    alert("genres")
+                    data = {"gt": strcheck, "np": strcheck2}
+                    pricedata = {"minprice" : lowerlimit, "maxprice" : upperlimit}                    // console.log(search_string)
+                    // if ((search_string == "") || (search_string == "notclickbase")){
+                    //         senddict = {"data": data}
+                    //     }
+                    // else
+                    //     {
+                    //         senddict = {"data": data, "searching": search_string}
+                    //     }
+
+                    // if(sess(search_string) == 0)
+                    //     senddict = {"data": data}
+                    // else
+                    //     senddict = {"data": {data, "searching": search_string}}
+                    alert(JSON.stringify({"pricedata": pricedata, "data": data}))
+                    $.ajax({
+                        url: '/redirecttopsell',
+                        dataType: 'json',
+                        type: 'post',
+                        async: false,
+                        contentType: 'application/json',
+                        data: JSON.stringify( {"pricedata": pricedata, "data": data} ),
+                        processData: false,
+                        success: function( data, textStatus, jQxhr ){
+                            alert(JSON.stringify(data))
+                            drawTable(data["data"])
+                        },
+                        error: function( jqXhr, textStatus, errorThrown ){
+                            console.log(textStatus);
+                        }
+                        });
+
+                    });
+            $('.npcb').change(function() {
+                // if ($(this).is(':checked')){
+                    // alert("Hi My Name is chikka chikka slim shady");
+                    // checks[0] = "Indie";
+                    var favorite2 = [];
+                    $.each($("input[name='npcb']:checked"), function(){
+                       favorite2.push($(this).val());
+                    });
+                    strcheck2 = favorite2.join(",")
+                    console.log(strcheck2)
+
+                    // strcheck = strcheck + 'Indie,'
+                    // alert(checks)
+
+                   // $.post('/redirecttopsell', {gt : strcheck}, );
+                    alert("npppppppp")
+                    // data = {"gt": strcheck}
+                    // console.log(search_string)
+                    
+                    // var senddict ={};
+                    // if ((search_string == "") || (search_string == "notclickbase")){
+                    //         senddict = {"data": data}
+                    //     }
+                    // else
+                    //     {
+                    //         senddict = {"data": data, "searching": search_string}
+                    //     }
+
+                    // if(sess(search_string) == 0)
+                    //     senddict = {"data": data}
+                    // else
+                    //     senddict = {"data": {data, "searching": search_string}}
+
+
+                    // console.log("***"+search_string)
+                    data = {"gt": strcheck, "np": strcheck2}
+                pricedata = {"minprice" : lowerlimit, "maxprice" : upperlimit}  
+                alert(JSON.stringify({"pricedata": pricedata, "data": data}))
+                    $.ajax({
+                        url: '/redirecttopsell',
+                        dataType: 'json',
+                        type: 'post',
+                        async: false,
+                        contentType: 'application/json',
+                        data: JSON.stringify( {"pricedata": pricedata, "data": data} ),
+                        processData: false,
+                        success: function( data, textStatus, jQxhr ){
+                            alert(JSON.stringify(data))
+                            drawTable(data["data"])
+                        },
+                        error: function( jqXhr, textStatus, errorThrown ){
+                            console.log(textStatus);
+                        }
+                        });
+
+        });
+
+            $("#searchprice").click(function(){
+                lowerlimit = $("#minprice").val()
+                upperlimit = $("#maxprice").val()
+                data = {"gt": strcheck, "np": strcheck2}
+                pricedata = {"minprice" : lowerlimit, "maxprice" : upperlimit}
+                alert(JSON.stringify({"data": data, "pricedata": pricedata}))
+
+                $.ajax({
+
+                    url: '/redirecttopsell',
+                        dataType: 'json',
+                        type: 'post',
+                        async: false,
+                        contentType: 'application/json',
+                        data: JSON.stringify( {"pricedata": pricedata, "data": data} ),
+                        processData: false,
+                        success: function( data, textStatus, jQxhr ){
+                            alert(JSON.stringify(data))
+                            drawTable(data["data"])
+                        },
+                        error: function( jqXhr, textStatus, errorThrown ){
+                            console.log(textStatus);
+                        }
+                });
+
+            });
+
+
+        
+    });
+
+    </script>
+    {% endblock %}
+
+    {% block body %}
+        {{ super() }}
+        </br>
+        </br>
+    
+            <div class="container-fluid">
+                <div class = "row">
+                    <div class = "col-sm">
+        
+                    </div>
+                    <div class = "col-sm">
+        
+                    </div>
+                    <div class = "col-sm">
+        
+                    </div>
+                    <div class = "col-sm">
+        
+                    </div>
+                    <div class = "col-sm">
+        
+                    </div>
+                    <div class = "col-sm">
+        
+                    </div>
+                    <div class = "col-sm">
+                        <form>
+                            <input type="checkbox" class="genrecb" id="indie" name="genrecb" value="Indie">
+                            <label for="indie"> Indie</label><br>
+                            <input type="checkbox" class="genrecb" id="action" name="genrecb" value="Action">
+                            <label for="action"> Action </label><br>
+                            <input type="checkbox" class="genrecb" id="adventure" name="genrecb" value="Adventure">
+                            <label for="adventure"> Adventure </label><br>
+                            <input type="checkbox" class="genrecb" id="casual" name="genrecb" value="Casual">
+                            <label for="casual"> Casual </label><br>
+                            <input type="checkbox" class="genrecb" id="rpg" name="genrecb" value="RPG">
+                            <label for="rpg"> Role Playing Games </label><br>
+                            
+                            <input type="checkbox" class="genrecb" id="racing" name="genrecb" value="Racing">
+                            <label for="racing"> Racing </label><br>
+                            <input type="checkbox" class="genrecb" id="violent" name="genrecb" value="Violent">
+                            <label for="violent"> Violent </label><br>
+                            <input type="checkbox" class="genrecb" id="simulation" name="genrecb" value="Simulation">
+                            <label for="rpg"> Simulation </label><br>
+                            <input type="checkbox" class="genrecb" id="sports" name="genrecb" value="Sports">
+                            <label for="sports"> Sports </label><br>
+                            <input type="checkbox" class="genrecb" id="strategy" name="genrecb" value="Strategy">
+                            <label for="strategy"> Strategy </label><br>
+    
+                            <input type="checkbox" class="genrecb" id="utilities" name="genrecb" value="Utilities">
+                            <label for="strategy"> Utilities </label><br>
+                            <input type="checkbox" class="genrecb" id="animation" name="genrecb" value="Animation & Modeling">
+                            <label for="strategy"> Animation </label><br>
+    
+                            <input type="checkbox" class="genrecb" id="massivelymultiplayer" name="genrecb" value="Massively Multiplayer">
+                            <label for="massivelymultiplayer"> Massively Multiplayer </label><br>
+    
+                            <input type="checkbox" class="genrecb" id="education" name="genrecb" value="Education">
+                            <label for="education"> Education </label><br>
+    
+                        </form>
+                    </div>
+                </div>
+            </br>
+            </br>
+                <div class = "row">
+                    <div class = "col-sm">
+    
+                    </div>
+                    <div class = "col-sm">
+    
+                    </div>
+                    <div class = "col-sm">
+    
+                    </div>
+                    <div class = "col-sm">
+    
+                    </div>
+                    <div class = "col-sm">
+    
+                    </div>
+                    <div class = "col-sm">
+    
+                    </div>
+                    <div class = "col-sm">
+    
+                        <form>
+                            <input type="checkbox" class="npcb" id="singleplayer" name="npcb" value="Single-player">
+                            <label for="singleplayer"> Single-Player</label><br>
+                            <input type="checkbox" class="npcb" id="multiplayer" name="npcb" value="Multi-player">
+                            <label for="multiplayer" >Multi-Player</label><br>
+                            <input type="checkbox" class="npcb" id="coop" name="npcb" value="Co-op">
+                            <label for="coop"> Co-op </label><br>
+                            <input type="checkbox" class="npcb" id="fullcontrollersupport" name="npcb" value="Full controller support">
+                            <label for="fullcontrollersupport"> full Controller Support </label><br>
+                            <input type="checkbox" class="npcb" id="onlinemultiplayer" name="npcb" value="Online Multi-Player">
+                            <label for="onlinemultiplayer"> Online Multi-Player </label><br>
+                            <input type="checkbox" class="npcb" id="onlinecoop" name="npcb" value="Online Co-op">
+                            <label for="onlinecoop"> Online Co-op </label><br>
+    
+                            <input type="checkbox" class="npcb" id="vrsupport" name="npcb" value="VR Support">
+                            <label for="vrsupport"> VR Support</label><br>
+                            <input type="checkbox" class="npcb" id="stc" name="npcb" value="Steam Trading Cards">
+                            <label for="stc"> Steam Trading Cards </label><br>
+                            <input type="checkbox" class="npcb" id="lmp" name="npcb" value="Local Multi-Player">
+                            <label for="lmp"> Local Multi-Player </label><br>
+                            <input type="checkbox" class="npcb" id="cpm" name="npcb" value="Cross-Platform Multiplayer">
+                            <label for="cpm"> Cross-Platform Multiplayer</label><br>
+                            <input type="checkbox" class="npcb" id="pcs" name="npcb" value="Partial Controller Support">
+                            <label for="pcs"> Partial Controller Support </label><br>
+                            <input type="checkbox" class="npcb" id="sc" name="npcb" value="Steam Cloud">
+                            <label for="sc"> Steam Cloud </label><br>
+                            <input type="checkbox" class="npcb" id="sss" name="npcb" value="Shared/Split Screen">
+                            <label for="sss"> Shared/Split Screen </label><br>
+                        </form>
+                    </div>
+            </div>
+    
+    
+    
+    
+    
+            <div class = "row">
+                <div class = "col-sm">
+    
+                </div>
+                <div class = "col-sm">
+    
+                </div>
+                <div class = "col-sm">
+    
+                </div>
+                <div class = "col-sm">
+    
+                </div>
+                <div class = "col-sm">
+    
+                </div>
+                <div class = "col-sm">
+    
+                </div>
+                <div class = "col-sm">
+    
+                <div>
+                    <form>
+                    </br></br></br>
+                        <h6>PRICE RANGE</h6>
+                        <!-- <label for="minprice">Min Price:</label> -->
+                        <input height="10" id="minprice" name="minprice" class="form-control mr-sm-2" type="search" placeholder="Lower Limit" aria-label="Search">
+                        </br>
+                        <!-- <input type="text" id="minprice" name="minprice" class="minprice"><br><br> -->
+                        <!-- <label for="maxprice">Max Price:</label> -->
+                        <input id="maxprice" name="maxprice" class="form-control mr-sm-2" type="search" placeholder="Upper Limit" aria-label="Search">
+                        </br>
+                        <!-- <input type="text" id="maxprice" name="maxprice" class="maxprice"><br><br> -->
+                        <button formmethod="post" id="searchprice" name="searchprice" value="searchprice" class="btn btn-outline-success my-2 my-sm-0" type="button">Search</button>&emsp;
+                      
+                    </form>
+                </div>
+    
+        </div>
+    </div>
+    
+        <!-- <table id = "fromdb" style="width:100%">
+            <tr>
+                <th>Game</th>
+                <th>Genres</th>
+            </tr>
+    
+            {% for items in tab %}
+            <tr>
+              <td>{{ items[0] }}</td>
+              <td>{{ items[1] }}</td>
+            </tr>
+            {% endfor %}
+        </table>  -->
+        <div style="overflow-x:auto;">
+            <table id = "fromdb">
+            </table> 
+        </div>
+    
+
+       
+
+    {% endblock %}
+<!-- </div> -->

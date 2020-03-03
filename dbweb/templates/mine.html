@@ -1,0 +1,192 @@
+{%extends "base.html"%}
+{% block head %}
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Blog Template for Bootstrap</title>
+
+    <!-- Bootstrap core CSS -->
+    <!-- <link href="dist/css/bootstrap.min.css" rel="stylesheet"> -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+    <!-- Custom styles for this template -->
+    <link href="https://fonts.googleapis.com/css?family=Playfair+Display:700,900" rel="stylesheet">
+    <link href="blog.css" rel="stylesheet">
+    <script>
+        $(document).ready(function(){
+            $("#addtocart").click(function(){
+                $.post("/addtocart", {game_id : {{gameMinuteDetails[0]}}}, function(success){
+                   window.location = "/cart"
+                });
+            });
+        });
+        function vote(polarity, appid)
+        {
+          $.post("/vote", {appid: appid, polarity:polarity}, function(success){
+              if(polarity == "true")
+              {
+                $("#true").css("color", "green")
+                $("#false").css("color", "white")
+              }
+              else {
+                $("#true").css("color", "white")
+                $("#false").css("color", "red")
+              }
+          });
+        }
+    </script>
+  {%endblock%}
+addtocart
+{%block body%}
+{% set appid,name,release_date,english,developer,publisher,platforms,required_age,categories,genres,steamspy_tags,achievements,positive_ratings,negative_ratings,average_playtime,median_playtime,owners,price = gameMinuteDetails%}
+{#% set steam_appid,detailed_description,about_the_game,short_description = des%#}
+{% set steam_appid,header_image,screenshots,background,movies = gameMedia%}
+{% set steam_appid,pc_requirements,mac_requirements,linux_requirements,minimum,recommended = gameRequirements%}
+<main role="main" class="container mt-5">
+  <div class="row">
+    <div class="col-md-8 blog-main">
+      <h3 class="pb-3 mb-4 font-italic border-bottom">
+        {{name}}
+      </h3>
+
+      <div class="blog-post">
+        <p class="blog-post-meta">{{release_date}} by <a href="#">{{developer}}</a></p>
+        <img src="{{header_image}}" class="img-fluid rounded" alt="Responsive image">
+        <hr>
+        <strong>Published by: </strong>{{publisher}}
+        <p class="text-justify">{{description | striptags}}</p>
+        {%if required_age > 0%}
+        <strong>Required Age</strong>:{{required_age}}
+        {%endif%}
+        <br>
+        <div class = "row">
+            <input type= "button" value = "Windows" class = "btn btn-dark ml-3" onclick=pcrequirements()>
+            {% if mac_requirements.items() | length > 0 %}
+            <input type= "button" value = "Mac" class = "btn btn-dark ml-3" onclick=pcrequirements()>
+            {% endif %}
+            {% if linux_requirements.items() | length > 0 %}
+            <input type= "button" value = "Linux" class = "btn btn-dark ml-3" onclick=pcrequirements()>
+            {% endif %}
+        </div>
+        <pre>
+          <code style = "color: white">
+            PC Requirements:
+            {%for key, value in pc_requirements.items()%}
+            {% if key != 'Recommended:' %}{{key}} {{value | replace("'", '')}}{% endif %}
+            {%endfor%}
+            {% if mac_requirements.items() | length > 0 %}
+              Mac Requirements:
+              {%for key, value in mac_requirements.items()%}
+                {{key}} {{value | replace("'", '')}}
+              {%endfor%}
+            {% endif %}
+            {% if linux_requirements.items() | length > 0 %}
+              Linux / Steam OS Requirements:
+              {%for key, value in linux_requirements.items()%}
+                {{key}} {{value | replace("'", '')}}
+              {%endfor%}
+            {% endif %}
+          </code>
+        </pre><br>
+        <h2>Description</h2>
+        <div class = "row">
+          {%for item in screenshots %}
+            <div class="mt-3 col-md-6">
+              <img src="{{item['path_thumbnail']}}" class="img-fluid mx-auto rounded" alt="Responsive image">
+            </div>
+          {% endfor %}
+        </div>
+        <h3 class = "mt-5 ">About</h3>
+        <p class = "text-justify">{{aboutGame | striptags}} </p>
+        {%if minimum != ''%}
+            <Strong> Recommended: </strong>
+            {{minimum}}
+        {%endif%}
+        <br>
+        {%if recommended != ''%}
+            <strong>Minimum :</strong>
+            {{recommended}}
+        {%endif%}
+        <h3>Short Description</h3>
+        <p class = "text-justify">{{shortDescription | striptags}}</p>
+        <div class = "col-md-8 mt-5 mb-5" style = "background-color: black">
+          {%if movies != None%}
+          {%for key, values in movies[0].items()%}
+            {%if key == 'thumbnail'%}
+              <video class="Responsive" poster="{{values}}" controls autoplay>
+            {%elif key not in ['id', 'name', 'thumbnail', 'highlight']%}
+              {%for keys, value in values.items()%}
+                <source src="{{value}}" label = "{{key}}">
+              {%endfor%}
+            {%endif%}
+          {%endfor%}
+          {%if 'thumbnail' in movies[0]%}
+            </video>
+          {%endif%}
+          {%endif%}
+        </div>
+        </div><!-- /.blog-post -->
+
+      <nav class="blog-pagination">
+        <a class="btn btn-outline-primary" href="#">Older</a>
+        <a class="btn btn-outline-secondary" href="#">Newer</a>
+      </nav>
+
+    </div><!-- /.blog-main -->
+
+    <aside class="col-md-4 blog-sidebar">
+
+      <div class="p-3">
+        <h4 class="font-italic">Archives</h4>
+        <ol class="list-unstyled mb-0">
+          <li><a href="#">March 2014</a></li>
+          <li><a href="#">February 2014</a></li>
+          <li><a href="#">January 2014</a></li>
+          <li><a href="#">December 2013</a></li>
+          <li><a href="#">November 2013</a></li>
+          <li><a href="#">October 2013</a></li>
+          <li><a href="#">September 2013</a></li>
+          <li><a href="#">August 2013</a></li>
+          <li><a href="#">July 2013</a></li>
+          <li><a href="#">June 2013</a></li>
+          <li><a href="#">May 2013</a></li>
+          <li><a href="#">April 2013</a></li>
+        </ol>
+      </div>
+
+      <div class="p-3">
+        <h4 class="font-italic">Elsewhere</h4>
+        <ol class="list-unstyled">
+          <li><a href="#">GitHub</a></li>
+          <li><a href="#">Twitter</a></li>
+          <li><a href="#">Facebook</a></li>
+        </ol>
+      </div>
+
+      <div class="p-3">
+          {% if user != 'Welcome' and incartornot != 1 %}
+          <button type="button" class="btn btn-success btn-lg" id="addtocart">Add to Cart</button>
+          {%endif%}
+      </div>
+      <div class = "col">
+         {% if user != 'Welcome' %}
+        <button type = "button" class = "row btn btn-lg btn-block" style="color:{{pcolor}}" onclick="vote('true', {{appid}})" id="true">
+          <i style="font-size:36px; color: 004d00;" class = "fa fa-toggle-up float-left"></i>
+          <div class = "ml-3 float-left" id = 'UpVote'>UpVote for this Game</div>
+        </button>
+        <button type = "button" class = "row btn btn-lg btn-block" style="color:{{ncolor}}" onclick="vote('false', {{appid}})" id="false">
+          <i style="font-size:36px; color: 990000;" class = "fa fa-toggle-down float-left"></i>
+          <div class = "ml-3 float-left">Disliked the Game!!</div>
+        </button>
+        {% endif %}
+      </div>
+    </aside><!-- /.blog-sidebar -->
+
+  </div><!-- /.row -->
+
+</main><!-- /.container -->
+  {%endblock%}

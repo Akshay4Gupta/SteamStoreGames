@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block title %} LOGIN  {% endblock %}
+{% block body %}
+{{ super() }}
+
+{% if message %}
+<p>{{ message }}</p>
+{% endif %}
+
+<form action="" method="post">
+  
+  <fieldset>
+    <legend>LOGIN</legend>
+    <p>
+      <label for="username">Username</label>
+      <input type="text" name="username">
+    </p>
+    <p>
+      <label for="password">Password</label>
+      <input type="password" name="password">
+    </p>
+    <p>
+      <input type="submit">
+    </p>    
+  </fieldset>
+
+</form>
+{% endblock %}

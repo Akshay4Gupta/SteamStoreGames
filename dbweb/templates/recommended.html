@@ -1,0 +1,195 @@
+{% extends "base.html" %}
+{%block head%}
+<script>
+  // function redirect_to_game(appid)
+  // {
+  //   window.location = "/alag/"+appid;
+  // }
+  $(document).ready(function(){
+      $(".genrecb, .npcb").change(function(){
+          var genres = [];
+          var categories = [];
+
+          $.each($("input[name='genrecb']:checked"), function(){
+              genres.push($(this).val());
+          });
+
+          $.each($("input[name='npcb']:checked"), function(){
+              categories.push($(this).val())
+          })
+          // strcheck = favorite.join(", ")
+          // alert(strcheck)
+          // alert(encodeURIComponent(JSON.stringify(favorite)))
+          // window.location = window.location.pathname + "?"
+          // alert("/filter?filterCriteria=Type&filterValue=" + window.location.pathname.slice(1, window.location.pathname.length) + "&genres=" + encodeURIComponent(JSON.stringify(genres) + "&categories=" + encodeURIComponent(JSON.stringify(categories))))
+          var location = "/filter?filterCriteria=Type&filterValue=" + window.location.pathname.slice(1, window.location.pathname.length)
+
+          if(genres.length > 0 || categories.length > 0)
+          {
+              if(genres.length > 0)
+                location += "&genres=" + encodeURIComponent(JSON.stringify(genres))
+              if(categories.length > 0)
+                location += "&categories=" + encodeURIComponent(JSON.stringify(categories))
+          }
+
+          window.location = location
+      });
+  })
+</script>
+<script>
+  function redirect_to_game(appid)
+  {
+    window.location = "/alag/"+appid;
+  }
+</script>
+<style>
+	body{
+		background-color: black;
+		color:white;
+	}
+
+	/* #main {
+
+	display: flex;
+	}
+
+	#main div {
+	flex-grow: 0;
+	flex-shrink: 0;
+	flex-basis: 40px;
+	} */
+	#wrapper {
+	display:table;
+	width:100%;
+	}
+	#row {
+	display:table-row;
+	}
+	#first {
+	display:table-cell;
+	width:10%;
+	}
+	#second {
+	display:table-cell;
+	width:80%;
+	}
+	#third {
+	display:table-cell;
+	width:2%;
+	}
+    .sidenav {
+      height: 100%; /* 100% Full-height */
+      width: 250px; /* 0 width - change this with JavaScript */
+      /* position: fixed; */
+      z-index: 1; /* Stay on top */
+      top: 0; /* Stay at the top */
+      left: 0;
+      background-color: #111; /* Black*/
+      overflow-x: hidden; /* Disable horizontal scroll */
+      padding-top: 60px; /* Place content 60px from the top */
+      padding-left: 20px;
+      padding-bottom: 30px;
+      transition: 0.5s; /* 0.5 second transition effect to slide in the sidenav */
+    }
+</style>
+{%endblock%}
+{%block body%}
+<div id="wrapper">
+	<div id="third">
+
+	</div>
+	<div id="first">
+
+		<nav>
+			<br>
+			<h4>Recommended</h4>
+			<a href="#" id="friends">By Friends</a><br>
+			<a href="#" id="curators">By Curators</a><br>
+			<a href="#" id="tags">Tags</a><br><br>
+
+			<h4>Discovery Queues</h4>
+			<a href="#" id="recommendations">Recommendations</a><br>
+			<a href="#" id="new_releases">New Releases</a><br><br>
+
+			<h4>Browse Categories</h4>
+			<a href="/filter?filterCriteria=Type&filterValue=Topsellers" id="top_sellers">Top Sellers</a><br>
+			<!-- <a href="#" id="rec_upd">Recently Updated</a><br> -->
+			<a href="/filter?filterCriteria=Type&filterValue=Newreleases" id="new_releases">New Releases</a><br>
+			<a href="/filter?filterCriteria=Type&filterValue=Upcoming" id="upcoming">Upcoming</a><br>
+			<!-- <a href="#" id="specials">Specials</a><br> -->
+			<a href="/filter?filterCriteria=Type&filterValue=VR" id="virtual_reality">Virtual Reality</a><br>
+			<!-- <a href="/filter?filterCriteria=Type&filterValue=Steamcontroller" id="steam_controller_friendly">Steam Controller Friendly</a> -->
+		</nav>
+
+	</div>
+
+<div id="second" align="left" class="clearfix">
+
+	<div class = "container col-sm">
+            <!-- <button style = "color: white; font-family: serif;" class = "btn btn-lg btn-block"> -->
+            <div class="row">
+                <div class = "col"></div>
+                <div class = "col"></div>
+                <div class = "col"></div>
+                <div class = "col"></div>
+            </div>
+            <!-- </button> -->
+		{%for i in recommendations%}
+			{%set appid, name, release_date, header_image, genres, achievements, positive_ratings, negative_ratings, average_playtime, developer, price = i%}
+            <button type = "button" style = "color: white; font-family: serif;" class = "btn btn-lg btn-block" onclick = "redirect_to_game({{appid}})">
+			<div class="row">
+			<div class = "col">
+			<img src = "{{header_image}}" width = "160px" height = "100px" class = "float-left"></img>
+			</div>
+			<div class = "col">
+                {{name}}
+            </div>
+
+			<div class = "col">
+				<i class = "fa fa-caret-up" style = "color: green;"></i>&nbsp{{positive_ratings}}<br>
+				<i class = "fa fa-caret-down" style = "color: red;"></i>&nbsp{{negative_ratings}}
+			</div>
+			<div class = "col">
+                {%if price == 0.0%}
+                   Free
+                {%else%}
+                   ${{price}}
+                {%endif%}
+            </div>
+			</div>
+            </button>
+            {%endfor%}
+    </div>
+</div>
+<div id="mySideNav" class="sidenav">
+        <!-- <form>
+            <input type="checkbox" class="cb" id="indie" name="indiecb" value="indie">
+            <label for="indie"> Indie</label><br>
+            <input type="checkbox" class="cb" id="action" name="actioncb" value="action">
+            <label for="action"> Action </label><br>
+            <input type="checkbox" class="cb" id="adventure" name="adventurecb" value="adventure">
+            <label for="adventure"> Adventure </label><br>
+            <input type="checkbox" class="cb" id="casual" name="casualcb" value="casual">
+            <label for="casual"> Casual </label><br>
+            <input type="checkbox" class="cb" id="rpg" name="rpgcb" value="rpg">
+            <label for="rpg"> Role Playing Games </label><br>
+        </form> -->
+        <form style="color:white">
+            <h3>GENRE</h3>
+            {% for key in genredict %}
+            <input type="checkbox" class="genrecb" id="{{key}}" name="genrecb" value="{{key}}" {{genredict[key]}}>
+            <label for="{{key}}">{{key}}</label><br>
+            {% endfor %}
+        </form>
+        <br><br><br>
+        <form style="color:white">
+            <h3>CATEGORY</h3>
+            {% for key in categorydict %}
+            <input type="checkbox" class="npcb" id="{{key}}" name="npcb" value="{{key}}" {{categorydict[key]}}>
+            <label for="{{key}}">{{key}}</label><br>
+            {% endfor %}
+        </form>
+</div>
+</div>
+
+{%endblock%}

@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+
+    <head>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+        <title>
+            top seller
+        </title>
+
+        <script>
+            var checks = new Array(5).fill(0)
+            $(document).ready(function(){
+                $('#indie').change(function() {
+                    if ($('#indie').is(':checked')){
+                        // alert("Hi My Name is chikka chikka slim shady");
+                        checks[0] = 1;
+                        alert(checks)
+                    }
+
+                    else
+                        checks[0]=0;
+                });
+
+                $('#action').change(function() {
+                    if ($('#action').is(':checked')){
+                        // alert("Hi My Name is chikka chikka slim shady");
+                        checks[1] = 1;
+                        alert(checks)
+                    }
+
+                    else
+                        checks[1]=0;
+                });
+
+                $('#adventure').change(function() {
+                    if ($('#adventure').is(':checked')){
+                        // alert("Hi My Name is chikka chikka slim shady");
+                        checks[2] = 1;
+                        alert(checks)
+                    }
+
+                    else
+                        checks[2]=0;
+                });
+
+                $('#casual').change(function() {
+                    if ($('#casual').is(':checked')){
+                        // alert("Hi My Name is chikka chikka slim shady");
+                        checks[3] = 1;
+                        alert(checks)
+                    }
+
+                    else
+                        checks[3]=0;
+                });
+
+                $('#rpg').change(function() {
+                    if ($('#rpg').is(':checked')){
+                        // alert("Hi My Name is chikka chikka slim shady");
+                        checks[4] = 1;
+                        alert(checks)
+                    }
+
+                    else
+                        checks[4]=0;
+                });
+
+            });
+
+        </script>
+    </head>
+    <body>
+            <div>
+                <form>
+                    <input type="checkbox" id="indie" name="indiecb" value="indie">
+                    <label for="indie"> Indie</label><br>
+                    <input type="checkbox" id="action" name="actioncb" value="action">
+                    <label for="action"> Action </label><br>
+                    <input type="checkbox" id="adventure" name="adventurecb" value="adventure">
+                    <label for="adventure"> Adventure </label><br>
+                    <input type="checkbox" id="casual" name="casualcb" value="casual">
+                    <label for="casual"> Casual </label><br>
+                    <input type="checkbox" id="rpg" name="rpgcb" value="rpg">
+                    <label for="rpg"> Role Playing Games </label><br>
+                </form>
+            </div>
+    </body>
+</html>
