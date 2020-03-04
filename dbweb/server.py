@@ -34,7 +34,22 @@ try:
             loginval = 'Logout'
             user = session['user']
 
-        return render_template('front_page.html', login = loginval, user = user)
+        query = '''select steamappid, name, release_date, header_image, genres, achievements, positive_ratings, negative_ratings, average_playtime, developer, price from (WITH trying as (select unnest(steamspy_tags) as steam, appid, name from asteam),
+poptaggames AS
+(
+SELECT appid, AVG(count) as avgcount
+FROM trying, tagcount
+WHERE lower(tag) = lower(steam)
+GROUP BY appid
+ORDER BY avgcount DESC
+)
+SELECT A.appid as steamappid, name, release_date, genres, achievements, positive_ratings, negative_ratings, average_playtime, developer, price
+FROM asteam A, poptaggames P
+WHERE A.appid = P.appid order by avgcount, positive_ratings - negative_ratings desc limit 3) temp, mediadata where steamappid = steam_appid;'''
+
+        cursor.execute(query)
+        zz = cursor.fetchall()
+        return render_template('front_page.html', login = loginval, user = user, zz = zz)
 
 
     @app.route('/acc_display', methods=['GET', 'POST'])
