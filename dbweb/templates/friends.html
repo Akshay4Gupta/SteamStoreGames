@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+{% block head %}
+<style>
+	body{
+		background-color: black;
+		color:white;
+    }
+    
+#wrapper {
+	display:table;
+	width:100%;
+	}
+	#row {
+	display:table-row;
+	}
+	#first {
+	display:table-cell;
+    width:20%;
+	}
+	#second {
+	display:table-cell;
+	width:70%;
+	}
+	#third {
+	display:table-cell;
+	width:2%;
+    }
+    
+</style>
+
+<script>
+    $("button[name='userbtn']").click(function(){
+        var btext = $(this).text()
+        $.post("/")
+    });
+</script>
+
+
+{% endblock %}
+
+{% block body %}
+<div id="wrapper" class = "container row ml-5">
+	<div id="first" class = "col-sm-2">   
+
+		<nav>
+			<br>
+			<h4>PEOPLE</h4>
+			<a href="/userresults?uservalue=allusers" id="allusers">ALL USERS</a><br>
+			<a href="/userresults?uservalue=friends" id="friends">FRIENDS</a><br><br>
+            
+            <h4>CONNECT</h4>
+			<a href="/userresults?uservalue=peopleclose" id="peopleclose">PEOPLE YOU MAY KNOW</a><br>
+			<a href="/userresults?uservalue=similar" id="similar">PEOPLE WITH SIMILAR INTERESTS</a><br><br>
+            <a href="/userresults?uservalue=mutual" id="mutual">MUTUAL FRIENDS</a><br><br>
+            <!-- <a href="/userresults?uservalue=recommend" id="recommend">RECOMMEND A GAME TO FRIEND</a><br><br> -->
+
+		</nav>
+
+    </div>
+    
+    <div id="second" class = "col-sm-4 row mt-5">
+        {%if typeof == 'similar'%}
+            {%for i in tab%}
+                {%set userid1, userid2, count = i%}
+                <script> alert({{i}})</script>
+                    <button name="userbtn" type = "button" style = "color: white; font-family: serif;" class = "btn btn-lg bg-dark col mt-5">
+                        {{userid2}}
+                    </button>
+            {%endfor%}
+        {%else%}
+            {%for i in tab%}
+                <button name="userbtn" type = "button" style = "color: white; font-family: serif;" class = "btn btn-lg bg-dark col mt-5">
+                    {{i[0]}}
+                </button>
+            {%endfor%}
+        {%endif%}
+
+    </div>
+    <div id="third" class = "col-sm-6"></div>
+<div>
+
+
+{% endblock %}

@@ -22,7 +22,7 @@
           // alert(encodeURIComponent(JSON.stringify(favorite)))
           // window.location = window.location.pathname + "?"
           // alert("/filter?filterCriteria=Type&filterValue=" + window.location.pathname.slice(1, window.location.pathname.length) + "&genres=" + encodeURIComponent(JSON.stringify(genres) + "&categories=" + encodeURIComponent(JSON.stringify(categories))))
-          var location = "/filter?filterCriteria=Type&filterValue=" + window.location.pathname.slice(1, window.location.pathname.length)
+          var location = "/filter?filterValue=" + window.location.pathname.slice(1, window.location.pathname.length)
 
           if(genres.length > 0 || categories.length > 0)
           {
@@ -34,7 +34,11 @@
 
           window.location = location
       });
-  })
+
+	  // $("#somethingdiff").change(function(){
+	  //
+	  // });
+  });
 </script>
 <script>
   function redirect_to_game(appid)
@@ -85,23 +89,35 @@
 
 		<nav>
 			<br>
+            {% if user != 'Welcome' %}
 			<h4>Recommended</h4>
 			<a href="#" id="friends">By Friends</a><br>
-			<a href="#" id="curators">By Curators</a><br>
+			<a href="#" id="somethingdiff">Try something different</a><br>
 			<a href="#" id="tags">Tags</a><br><br>
+            {% endif %}
 
 			<h4>Discovery Queues</h4>
 			<a href="#" id="recommendations">Recommendations</a><br>
 			<a href="#" id="new_releases">New Releases</a><br><br>
 
 			<h4>Browse Categories</h4>
-			<a href="/filter?filterCriteria=Type&filterValue=Topsellers" id="top_sellers">Top Sellers</a><br>
+			<a href="/filter?filterValue=Topsellers" id="top_sellers">Top Sellers</a><br>
 			<!-- <a href="#" id="rec_upd">Recently Updated</a><br> -->
-			<a href="/filter?filterCriteria=Type&filterValue=Newreleases" id="new_releases">New Releases</a><br>
-			<a href="/filter?filterCriteria=Type&filterValue=Upcoming" id="upcoming">Upcoming</a><br>
+			<a href="/filter?filterValue=Newreleases" id="new_releases">New Releases</a><br>
+			<a href="/filter?filterValue=Upcoming" id="upcoming">Upcoming</a><br>
 			<!-- <a href="#" id="specials">Specials</a><br> -->
-			<a href="/filter?filterCriteria=Type&filterValue=VR" id="virtual_reality">Virtual Reality</a><br>
+			<a href="/filter?filterValue=VR" id="virtual_reality">Virtual Reality</a><br>
 			<!-- <a href="/filter?filterCriteria=Type&filterValue=Steamcontroller" id="steam_controller_friendly">Steam Controller Friendly</a> -->
+
+            <h4>Other Links</h4>
+            <a href="/filter?filterValue=Tags" id="tagrec">Recommended by Tags</a><br>
+            {% if user != 'Welcome' %}
+            <a href="/filter?filterValue=PopularFriends" id = "popfriends">Popular Among Friends</a><br>
+            <a href="/filter?filterValue=Unexplored" id = "unexplored">Unexplored Games</a><br>
+            <a href="/filter?filterValue=DevFriends" id = "devfriends">Top games of Developers favoured by Friends</a><br>
+            <a href="/filter?filterValue=Average" id = "average">Games with highest average playtime</a><br>
+            {% endif %}
+
 		</nav>
 
 	</div>

@@ -9,6 +9,13 @@
         })
     }
 
+    function removegame(game_id)
+    {
+        $.post("/remove", {game_id: game_id}, function(success){
+            window.location = "/cart"
+        });
+    }
+
     function redirect_to_game(appid)
     {
       window.location = "/alag/"+appid;
@@ -36,7 +43,7 @@
                                 <td> {{tuple[i]}} </td>
                             {% endfor %}
                                 <td><button type="button" class="btn btn-success" id="buy_button" onclick="buygame('{{tuple[0]}}')">Buy</button></td>
-                                <td><button type="button" class="btn btn-danger" id="remove_button">Remove</button></td>
+                                <td><button type="button" class="btn btn-danger" id="remove_button" onclick="removegame('{{tuple[0]}}')">Remove</button></td>
                         </tr>
                     {% endfor %}
                 </tbody>

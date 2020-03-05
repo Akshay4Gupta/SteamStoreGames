@@ -26,7 +26,13 @@
                 });
             }
         });
-    
+
+        $("#register_button").click(function(){
+                $.post('/register', {current_url : $(location).attr("href")}, function(success){
+                    window.location = "/register";
+                });
+        });
+
         $("#search").click(function(){
             search_string = $("#gs").val();
             data = {"searching": search_string}
@@ -45,16 +51,16 @@
                         alert(JSON.stringify(data))
                         drawTable(data["data"])
                     }else{
-                       window.location = "/topsellpage" 
+                       window.location = "/topsellpage"
                     }
                 },
                 error: function( jqXhr, textStatus, errorThrown ){
                     console.log(textStatus);
                 }
                 });
-            
+
         });
-    
+
     });
 </script>
 {%block head%}
@@ -87,18 +93,6 @@ body{
                 <a class="nav-link" href="/">Home <span class="sr-only">(current)</span>
                 </a>
             </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#">Link</a>
-            </li>
-            <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Dropdown</a>
-                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                    <a class="dropdown-item" href="#">Action</a>
-                    <a class="dropdown-item" href="#">Another action</a>
-                <div class="dropdown-divider">
-                </div><a class="dropdown-item" href="#">Something else here</a></div>
-
-            </li>
             {%if user != 'Welcome'%}
             <li class="nav-item"><a class="nav-link" href="/cart">Cart</a></li>
             {%endif%}
@@ -106,6 +100,9 @@ body{
                     <input id="gs" name="gs" class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
                     <button formmethod="post" id="search" name="search" value="search" class="btn btn-outline-success my-2 my-sm-0" type="button">Search</button>&emsp;
                 </form><button class="btn btn-outline-success my-2 my-sm-0" type="submit" id="login_button">{{login}}</button>
+                {% if user == 'Welcome' %}
+                &emsp;<button class="btn btn-outline-success my-2 my-sm-0" type="submit" id="register_button">Register</button>
+                {%endif%}
             </div>
         </nav>
 	{%block body%}

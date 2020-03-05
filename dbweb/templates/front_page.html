@@ -1,29 +1,73 @@
 {% extends "base.html" %}
-
 {% block head %}
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+	<!-- <meta content="text/html; charset=utf-8" http-equiv="Content-Type" /> -->
+	<script type="text/jquery" src="jquery-1.12.1.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
+	<!-- <script src="js/jquery.slider.js" type="text/javascript"></script> -->
+	<script src="js/jquery.slider.js" type="text/jquery"></script>
+
+  <style>
+            body{
+        background-color:black;
+        color:white;
+        }
+
+        .mySlides{
+  width:1900px;
+  position:relative;
+  overflow:hidden;
+  height:600px;/* set arbitrary height*/
+}
+
+
+  </style>
+
+  
 {% endblock %}
 
 {% block  body%}
-<nav>
-	<br>
-	<h4>Recommended</h4>
-	<a href="/filter?filterValue=Recfriends" id="friends">By Friends</a><br>
-	<a href="#" id="curators">By Curators</a><br>
-	<a href="#" id="tags">Tags</a><br><br>
-
-	<h4>Discovery Queues</h4>
-	<a href="#" id="recommendations">Recommendations</a><br>
-	<a href="#" id="new_releases">New Releases</a><br><br>
-
-	<h4>Browse Categories</h4>
-	<a href="/filter?filterValue=Topsellers" id="top_sellers">Top Sellers</a><br>
-	<a href="#" id="rec_upd">Recently Updated</a><br>
-	<a href="/filter?filterValue=Newreleases" id="new_releases">New Releases</a><br>
-	<a href="/filter?filterValue=Upcoming" id="upcoming">Upcoming</a><br>
-	<a href="#" id="specials">Specials</a><br>
-	<a href="/filter?filterValue=VR" id="virtual_reality">Virtual Reality</a><br>
-	<a href="/filter?filterValue=Steamcontroller" id="steam_controller_friendly">Steam Controller Friendly</a>
 
 </nav>
+{%set steamappid0, name0, release_date0, header_image0, genres0, achievements0, positive_ratings0, negative_ratings0, average_playtime0, developer0, price0 = zz[0]%}
+{%set steamappid1, name1, release_date1, header_image1, genres1, achievements1, positive_ratings1, negative_ratings1, average_playtime1, developer1, price1 = zz[1]%}
+{%set steamappid2, name2, release_date2, header_image2, genres2, achievements2, positive_ratings2, negative_ratings2, average_playtime2, developer2, price2 = zz[2]%}
+{%set steamappid3, name3, release_date3, header_image3, genres3, achievements3, positive_ratings3, negative_ratings3, average_playtime3, developer3, price3 = zz[3]%}
+{%set steamappid4, name4, release_date4, header_image4, genres4, achievements4, positive_ratings4, negative_ratings4, average_playtime4, developer4, price4 = zz[4]%}
+{%set steamappid5, name5, release_date5, header_image5, genres5, achievements5, positive_ratings5, negative_ratings5, average_playtime5, developer5, price5 = zz[5]%}
+{%set steamappid6, name6, release_date6, header_image6, genres6, achievements6, positive_ratings6, negative_ratings6, average_playtime6, developer6, price6 = zz[6]%}
+{%set steamappid7, name7, release_date7, header_image7, genres7, achievements7, positive_ratings7, negative_ratings7, average_playtime7, developer7, price7 = zz[7]%}
+{%set steamappid8, name8, release_date8, header_image8, genres8, achievements8, positive_ratings8, negative_ratings8, average_playtime8, developer8, price8 = zz[8]%}
+{%set steamappid9, name9, release_date9, header_image9, genres9, achievements9, positive_ratings9, negative_ratings9, average_playtime9, developer9, price9 = zz[9]%}
 
+        <div class="slider mt-5" style="max-width:500px; max-height:300px;" align="center" >
+
+          <img class="mySlides" src="{{header_image0}}" alt="First slide" >
+          <img class="mySlides" src="{{header_image1}}" alt="Second slide">
+          <img class="mySlides" src="{{header_image2}}" alt="Third slide">
+          <img class="mySlides" src="{{header_image3}}" alt="Fourth slide">
+          <img class="mySlides" src="{{header_image4}}" alt="Fifth slide">
+          <img class="mySlides" src="{{header_image5}}" alt="Sixth slide" >
+          <img class="mySlides" src="{{header_image6}}" alt="Seventh slide">
+          <img class="mySlides" src="{{header_image7}}" alt="Eighth slide">
+          <img class="mySlides" src="{{header_image8}}" alt="Ninth slide">
+          <img class="mySlides" src="{{header_image9}}" alt="Tenth slide">
+      </div>
+        <script>
+          var myIndex = 0;
+          carousel();
+          function carousel() {
+              var i;
+              var x = document.getElementsByClassName("mySlides");
+              for (i = 0; i < x.length; i++) {
+                 x[i].style.display = "none";  
+              }
+              myIndex++;
+              if (myIndex > x.length) {myIndex = 1}    
+              x[myIndex-1].style.display = "block";  
+              setTimeout(carousel, 2000); // Change image every 2 seconds
+          };
+        
+          </script>
 {% endblock %}
